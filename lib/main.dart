@@ -1,3 +1,4 @@
+import 'package:energy_app/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -14,10 +15,8 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Flutter App'),
         ),
-        body: const Center(
-          child: Text('Hello, Flutter!'),
+        body: HomePage()
         ),
-      ),
-    );
+      );
   }
 }
