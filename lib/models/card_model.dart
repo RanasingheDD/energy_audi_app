@@ -1,7 +1,7 @@
 class CardData {
   String title;
   String image_url;
-  int value;
+  String value;
   String symbol;
 
   CardData({

@@ -11,13 +11,15 @@ class HomePage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
-        leading: IconButton(
-          onPressed: () {
-            ////////////////////
-          },
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.white,
+        leading: InkWell(
+          child: IconButton(
+            onPressed: () {
+              ////////////////////
+            },
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

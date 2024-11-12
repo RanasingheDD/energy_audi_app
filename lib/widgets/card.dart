@@ -20,13 +20,49 @@ class CardPage extends StatelessWidget {
             offset: Offset(0, 1), 
           ),]
         ),
-        child: Center(
-          child: Text(
-            card.title,
-            style: const TextStyle(
-              fontSize: 18,  
-              color: Colors.grey,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Image.asset(card.image_url,
+              width: 50,
+              height: 50,
+              ),
+              const SizedBox(height: 30,),
+              Text(
+                    card.title,
+                    style: const TextStyle(
+                      fontSize: 18,  
+                      color: Colors.grey,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+              Row(
+                mainAxisAlignment:MainAxisAlignment.center,
+                children: [
+                  Text(
+                    card.value,
+                    style: const TextStyle(
+                      fontSize: 25,  
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600
+                    ),
+                  ),
+                  const SizedBox(width: 5,),
+                  Text(
+                    card.symbol,
+                    style: const TextStyle(
+                      fontSize: 25,  
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600
+                    ),
+                  ),
+                ],
+              ),
+              
+            ],
           ),
         ),
       ),
