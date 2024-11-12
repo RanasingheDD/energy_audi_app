@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Flutter App'),
         ),
-        body: HomePage()
+        body: const HomePage()
         ),
       );
   }
