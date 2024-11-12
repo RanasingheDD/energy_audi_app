@@ -1,8 +1,8 @@
 import 'package:energy_app/models/card_model.dart';
 
 List <CardData> cards = [
-CardData(title: "Voltage", image_url: "image_url", value: 230),
-CardData(title: "Current", image_url: "image_url", value: 10),
-CardData(title: "Humadity", image_url: "image_url", value: 1),
-CardData(title: "Power", image_url: "image_url", value: 1)
+CardData(title: "Voltage", image_url: "assets/voltage.png", value: 230, symbol: "V"),
+CardData(title: "Current", image_url: "assets/voltage.png", value: 10,symbol: "A"),
+CardData(title: "Humadity", image_url: "assets/hum.png", value: 1,symbol: "%"),
+CardData(title: "Brightness", image_url: "assets/bright.png", value: 1,symbol: "%")
 ];
