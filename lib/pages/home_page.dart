@@ -1,5 +1,6 @@
 import 'package:energy_app/data/card_data.dart';
 import 'package:energy_app/widgets/card.dart';
+import 'package:energy_app/widgets/line_chart.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -60,20 +61,26 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 1,
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 1,
+              ),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: cards.length,
+              itemBuilder: (context, index) {
+                return CardPage(card: cards[index]);
+              },
+            ),
           ),
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: cards.length,
-          itemBuilder: (context, index) {
-            return CardPage(card: cards[index]);
-          },
-        ),
+          LineChartCard(),
+        ],
       ),
     );
   }
