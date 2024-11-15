@@ -57,9 +57,19 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
         color: isSelected ? Colors.white : Colors.transparent,
       ),
       child: InkWell(
-        onTap: () => setState(() {
-          selectedIndex = index;
-        }),
+        onTap: () {
+          // Update the selected index
+          setState(() {
+            selectedIndex = index;
+          });
+          // Navigate to the corresponding page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => data.menu[index].page,
+            ),
+          );
+        },
         child: Row(
           children: [
             Padding(

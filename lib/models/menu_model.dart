@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
-class MenuModel{
+class MenuModel {
   IconData icon;
   String title;
+  Widget page;
 
-  MenuModel({
-    required this.icon,
-    required this.title
-  });
+  MenuModel({required this.icon, required this.title, required this.page});
 }
