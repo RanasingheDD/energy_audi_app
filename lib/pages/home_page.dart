@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _showTitle = false;
-  
+
   // Define a GlobalKey to control the Scaffold
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -67,9 +67,7 @@ class _HomePageState extends State<HomePage> {
         ),
         centerTitle: true,
       ),
-      drawer: Drawer(
-        child: SideMenuWidget()
-      ),
+      drawer: const Drawer(child: SideMenuWidget()),
       body: Column(
         children: [
           Padding(
