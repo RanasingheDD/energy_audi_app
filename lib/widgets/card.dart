@@ -5,6 +5,7 @@ class CardPage extends StatelessWidget {
   final CardData card;
   const CardPage({super.key, required this.card});
 
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,9 +25,12 @@ class CardPage extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Image.asset(card.image_url,
-              width: 20,
-              height: 20,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.asset(card.image_url,
+                width: 20,
+                height: 20,
+                ),
               ),
               const SizedBox(height: 30,),
               Text(

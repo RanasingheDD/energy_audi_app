@@ -2,14 +2,22 @@ import 'package:energy_app/data/menu_data.dart';
 import 'package:flutter/material.dart';
 
 class SideMenuWidget extends StatefulWidget {
-  const SideMenuWidget({super.key});
+  final int currentIndex;
+
+  const SideMenuWidget({required this.currentIndex});
 
   @override
   State<SideMenuWidget> createState() => _SideMenuWidgetState();
 }
 
 class _SideMenuWidgetState extends State<SideMenuWidget> {
-  int selectedIndex = 0;
+  late int selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.currentIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +40,6 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
               ),
             ),
           ),
-          // List of menu items
           Expanded(
             child: ListView.builder(
               shrinkWrap: true,
@@ -58,15 +65,24 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
       ),
       child: InkWell(
         onTap: () {
-          // Update the selected index
           setState(() {
             selectedIndex = index;
           });
-          // Navigate to the corresponding page
-          Navigator.push(
+
+          // Navigate to the selected page
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => data.menu[index].page,
+              builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(data.menu[index].title),
+                  backgroundColor: const Color(0xFF171821),
+                ),
+                body: data.menu[index].page,
+                drawer: Drawer(
+                  child: SideMenuWidget(currentIndex: index),
+                ),
+              ),
             ),
           );
         },

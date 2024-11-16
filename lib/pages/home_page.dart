@@ -1,8 +1,13 @@
 import 'package:energy_app/data/card_data.dart';
+import 'package:energy_app/models/card_model.dart';
+import 'package:energy_app/provider/report_data_provider.dart';
+import 'package:energy_app/widgets/button.dart';
 import 'package:energy_app/widgets/card.dart';
 import 'package:energy_app/widgets/line_chart.dart';
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,14 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _showTitle = false;
-
-  // Define a GlobalKey to control the Scaffold
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  
   @override
   void initState() {
     super.initState();
-    // Delay the title appearance for the animation effect
     Future.delayed(const Duration(milliseconds: 100), () {
       setState(() {
         _showTitle = true;
@@ -31,66 +32,83 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the key here
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
         leading: IconButton(
-          onPressed: () {
-            // Open the drawer using the scaffold key
-            _scaffoldKey.currentState?.openDrawer();
-          },
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.white,
-          ),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+          icon: const Icon(Icons.menu, color: Colors.white),
         ),
         title: AnimatedSwitcher(
           duration: const Duration(milliseconds: 800),
-          transitionBuilder: (Widget child, Animation<double> animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
+          transitionBuilder: (child, animation) =>
+              FadeTransition(opacity: animation, child: child),
           child: _showTitle
               ? const Text(
                   'Energy Audit Dashboard',
-                  key: ValueKey("title"), // Key triggers AnimatedSwitcher
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  key: ValueKey("title"),
+                  style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                 )
-              : const SizedBox(), // Empty widget before the title appears
+              : const SizedBox(),
         ),
         centerTitle: true,
       ),
-      drawer: const Drawer(child: SideMenuWidget()),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 2,
-                  mainAxisSpacing: 1,
+      drawer: const SideMenuWidget(currentIndex: 0),
+      body: Consumer<ReportDataProvider>(
+        builder: (context, reportData, child) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                    ),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: cards.length,
+                    itemBuilder: (context, index) {
+                      final CardData card = cards[index];
+                      return CardPage(card: card);
+                    },
+                  ),
                 ),
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: cards.length,
-                itemBuilder: (context, index) {
-                  return CardPage(card: cards[index]);
-                },
               ),
-            ),
-          ),
-          const Expanded(child: LineChartCard()),
-        ],
+              const LineChartCard(),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  BUTTONWIDGET(
+                    name: "Add to Report",
+                    color: Colors.red,
+                    additem: () {
+                      try {
+                        reportData.addData("Room 01", cards);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Room 01 added to report')),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Failed to add Room 01 to report')),
+                        );
+                      }
+                    },
+                  ),
+                  BUTTONWIDGET(
+                    name: "New Task",
+                    color: Colors.green,
+                    additem: () {},
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
