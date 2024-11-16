@@ -1,7 +1,6 @@
 import 'package:energy_app/models/menu_model.dart';
 import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/pages/settings_page.dart';
-import 'package:energy_app/pages/dashboard_page.dart';
 import 'package:energy_app/pages/report_page.dart';
 import 'package:flutter/material.dart';
 

@@ -1,7 +1,5 @@
 import 'package:energy_app/models/report_card_model.dart';
-import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/provider/report_data_provider.dart';
-import 'package:energy_app/widgets/card.dart';
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +31,7 @@ class ReportPage extends StatelessWidget {
           ),
         ),
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
            child: SideMenuWidget(currentIndex: 1)
       ),
       body: Consumer<ReportDataProvider>(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class BUTTONWIDGET extends StatelessWidget {
    BUTTONWIDGET({super.key, required this.name, required this.color, required this.additem});
 

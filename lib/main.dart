@@ -1,5 +1,4 @@
 import 'package:energy_app/pages/home_page.dart';
-import 'package:energy_app/pages/report_page.dart';
 import 'package:energy_app/provider/report_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

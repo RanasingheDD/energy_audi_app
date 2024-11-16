@@ -1,7 +1,6 @@
-import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -9,9 +8,6 @@ class SettingsPage extends StatefulWidget {
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
-
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
 class _SettingsPageState extends State<SettingsPage> {
   bool isDarkMode = true;
   bool isPushNotificationEnabled = true;
@@ -109,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Scaffold.of(context).openDrawer(),
           ),
         ),
-         drawer: SideMenuWidget(currentIndex: 2,),
+         drawer: const SideMenuWidget(currentIndex: 2,),
          body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
