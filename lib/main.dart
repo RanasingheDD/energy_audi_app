@@ -1,4 +1,5 @@
 import 'package:energy_app/pages/home_page.dart';
+import 'package:energy_app/pages/settings_page.dart';
 import 'package:energy_app/provider/report_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,5 +22,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
+    
   }
 }

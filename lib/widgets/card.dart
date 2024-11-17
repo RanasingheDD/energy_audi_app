@@ -32,16 +32,13 @@ class CardPage extends StatelessWidget {
                 height: 20,
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(height: 20,),
               Text(
                     card.title,
                     style: const TextStyle(
                       fontSize: 22,  
                       color: Colors.grey,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 30,
                   ),
               Row(
                 mainAxisAlignment:MainAxisAlignment.center,

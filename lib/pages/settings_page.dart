@@ -1,14 +1,16 @@
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 
-
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
+
 class _SettingsPageState extends State<SettingsPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   bool isDarkMode = true;
   bool isPushNotificationEnabled = true;
   bool isSoundEnabled = true;
@@ -21,219 +23,176 @@ class _SettingsPageState extends State<SettingsPage> {
     _getAppVersion();
   }
 
-  // Method to fetch app version using package_info
   void _getAppVersion() async {
-  //  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    // Simulating fetching the app version
     setState(() {
-  //    appVersion = packageInfo.version; // Set the app version
+      appVersion = '1.0.0'; // Example version
     });
   }
 
-  // Toggle dark/light mode
   void _toggleTheme(bool value) {
     setState(() {
       isDarkMode = value;
     });
-    // Save theme preference here (SharedPreferences, Provider, etc.)
+    // Save the theme preference using a state management solution or SharedPreferences
   }
 
-  // Toggle push notification
   void _togglePushNotification(bool value) {
     setState(() {
       isPushNotificationEnabled = value;
     });
-    // Handle enabling/disabling push notifications here
   }
 
-  // Toggle notification sound
   void _toggleSound(bool value) {
     setState(() {
       isSoundEnabled = value;
     });
-    // Handle sound preference here
   }
 
-  // Toggle vibration
   void _toggleVibration(bool value) {
     setState(() {
       isVibrationEnabled = value;
     });
-    // Handle vibration preference here
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: isDarkMode
-          ? ThemeData.dark().copyWith(
-              scaffoldBackgroundColor: const Color.fromARGB(255, 21, 17, 37),
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Color.fromARGB(255, 21, 17, 37),
-              ),
-            )
-          : ThemeData.light().copyWith(
-              scaffoldBackgroundColor: Colors.white,
-              appBarTheme: const AppBarTheme(
-                  backgroundColor: Colors.white,
-                  titleTextStyle: TextStyle(
-                    color: Colors.black,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  )),
-            ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Settings',
-            style: TextStyle(
-              color: isDarkMode ? Colors.white : Colors.black,
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
+    return Scaffold(
+      backgroundColor: isDarkMode
+            ? const Color.fromARGB(255, 21, 17, 37)
+            : Colors.white,
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: const Text('Settings'),
+        centerTitle: true,
+        backgroundColor: isDarkMode
+            ? const Color.fromARGB(255, 21, 17, 37)
+            : Colors.white,
+        foregroundColor: isDarkMode ? Colors.white : Colors.black,
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: isDarkMode ? Colors.white : Colors.black,
           ),
-          backgroundColor:
-              isDarkMode ? const Color.fromARGB(255, 21, 17, 37) : Colors.white,
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: isDarkMode ? Colors.white : Colors.black,
-              size: 25,
-            ),
-            onPressed: () =>
-              Scaffold.of(context).openDrawer(),
-          ),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
-         drawer: const SideMenuWidget(currentIndex: 2,),
-         body: Padding(
+      ),
+      drawer: Drawer(
+        child: SideMenuWidget(
+          currentIndex: 2, 
+          onMenuSelect: (index) {
+          
+            print('Selected menu index: $index');
+          },
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Dark/Light Theme Toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Dark Mode',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Switch(
-                    value: isDarkMode,
-                    onChanged: _toggleTheme,
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.grey,
-                  ),
-                ],
+              _buildSwitchTile(
+                title: isDarkMode ? 'Dark Mode' : "Light Mode",
+                value: isDarkMode,
+                onChanged: _toggleTheme,
               ),
               const SizedBox(height: 20),
-
-              // Push Notification Toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Push Notifications',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Switch(
-                    value: isPushNotificationEnabled,
-                    onChanged: _togglePushNotification,
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.grey,
-                  ),
-                ],
+              _buildSwitchTile(
+                title: 'Push Notifications',
+                value: isPushNotificationEnabled,
+                onChanged: _togglePushNotification,
               ),
               const SizedBox(height: 20),
-
-              // Sound Toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Notification Sound',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Switch(
-                    value: isSoundEnabled,
-                    onChanged: _toggleSound,
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.grey,
-                  ),
-                ],
+              _buildSwitchTile(
+                title: 'Notification Sound',
+                value: isSoundEnabled,
+                onChanged: _toggleSound,
               ),
               const SizedBox(height: 20),
-
-              // Vibration Toggle
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Notification Vibration',
-                    style: TextStyle(
-                      color: isDarkMode ? Colors.white : Colors.black,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Switch(
-                    value: isVibrationEnabled,
-                    onChanged: _toggleVibration,
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.grey,
-                  ),
-                ],
+              _buildSwitchTile(
+                title: 'Notification Vibration',
+                value: isVibrationEnabled,
+                onChanged: _toggleVibration,
               ),
               const SizedBox(height: 20),
-
-              // About Us Section
-              Text(
-                'About Us',
-                style: TextStyle(
-                    color: isDarkMode ? Colors.white : Colors.black,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'We are a team passionate about creating amazing apps for our users.',
-                style: TextStyle(
-                  color: isDarkMode ? Colors.white : Colors.black,
-                  fontSize: 16,
-                ),
-              ),
+              _buildAboutSection(),
               const SizedBox(height: 20),
-
-              // App Version
-              Row(
-                children: [
-                  Text(
-                    'App Version: ',
-                    style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black,
-                        fontSize: 16),
-                  ),
-                  Text(
-                    appVersion.isEmpty ? 'Loading...' : appVersion,
-                    style: TextStyle(
-                        color: isDarkMode ? Colors.white : Colors.black,
-                        fontSize: 16),
-                  ),
-                ],
-              ),
+              _buildAppVersion(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSwitchTile({
+    required String title,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+        ),
+        Switch(
+          value: value,
+          onChanged: onChanged,
+          activeColor: Colors.white,
+          activeTrackColor: Colors.grey,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAboutSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'About Us',
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'We are a team passionate about creating amazing apps for our users.',
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAppVersion() {
+    return Row(
+      children: [
+        Text(
+          'App Version: ',
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+        ),
+        Text(
+          appVersion.isEmpty ? 'Loading...' : appVersion,
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+            fontSize: 16,
+          ),
+        ),
+      ],
     );
   }
 }
