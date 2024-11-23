@@ -1,7 +1,8 @@
-import 'package:energy_app/provider/report_data_provider.dart';
-import 'package:energy_app/widgets/menu.dart';
+import 'package:energy_app/report/navigate_pdf.dart';
+import 'package:energy_app/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:energy_app/provider/report_data_provider.dart';// Import the updated report generator.
 
 class ReportPage extends StatelessWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -12,28 +13,14 @@ class ReportPage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu, color: Colors.white),
-            onPressed: () => Scaffold.of(context).openDrawer(), // Open the drawer
-          ),
-        ),
         title: const Text(
-          "Report",
+          "Room Reports",
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w500,
             color: Colors.white,
             letterSpacing: 1,
           ),
-        ),
-      ),
-      drawer: Drawer(
-        child: SideMenuWidget(
-          currentIndex: 1, 
-          onMenuSelect: (index) {
-            print('Selected menu index: $index');
-          },
         ),
       ),
       body: Consumer<ReportDataProvider>(
@@ -43,14 +30,7 @@ class ReportPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Room Reports",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+
                 const SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
@@ -65,42 +45,21 @@ class ReportPage extends StatelessWidget {
                             color: Colors.deepPurple,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Row(
+                          child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.room, color: Colors.white, size: 40),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Room: ${data.room}",
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Voltage:      ${data.volt} V",
-                                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                    Text(
-                                      "Current:      ${data.current} A",
-                                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                    Text(
-                                      "Humidity:    ${data.hum} %",
-                                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                    Text(
-                                      "Light:           ${data.light} %",
-                                      style: const TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                  ],
+                              Text(
+                                "Room: ${data.room}",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              Text("Voltage: ${data.volt} V", style: const TextStyle(color: Colors.white)),
+                              Text("Current: ${data.current} A", style: const TextStyle(color: Colors.white)),
+                              Text("Humidity: ${data.hum} %", style: const TextStyle(color: Colors.white)),
+                              Text("Light: ${data.light} %", style: const TextStyle(color: Colors.white)),
                             ],
                           ),
                         ),
@@ -108,7 +67,14 @@ class ReportPage extends StatelessWidget {
                     },
                   ),
                 ),
-              ],
+                Center(
+                  child: BUTTONWIDGET(name: 'Generate & View Report', color: Colors.green, additem: () { 
+                      final reportData = Provider.of<ReportDataProvider>(context, listen: false).reportData;
+                      ReportGeneratorPage().generateAndShowPdfReport(context, reportData);
+                   },                  
+                  ),
+                )
+             ],
             ),
           );
         },

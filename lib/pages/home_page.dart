@@ -56,9 +56,8 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: Drawer(
         child: SideMenuWidget(
-          currentIndex: 0, // Highlight "Reports" in the side menu
+          currentIndex: 0, 
           onMenuSelect: (index) {
-            // Handle navigation logic if needed
             print('Selected menu index: $index');
           },
         ),
