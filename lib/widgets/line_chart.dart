@@ -1,15 +1,58 @@
 import 'package:energy_app/data/line_chart_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/scheduler.dart';
 
-class LineChartCard extends StatelessWidget {
+class LineChartCard extends StatefulWidget {
   const LineChartCard({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final data = LineData();
+  State<LineChartCard> createState() => _LineChartCardState();
+}
 
+class _LineChartCardState extends State<LineChartCard> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  List<FlSpot> animatedSpots = [];
+
+  @override
+  void initState() {
+    super.initState();
+    
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 5), // Adjust the duration as needed
+      vsync: this,
+    );
+
+    // Define the animation to progress from 0 to the total number of spots
+    _animation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    )..addListener(() {
+        setState(() {
+          // Calculate the number of points to display based on the animation progress
+          final numOfPoints = (data.spots.length * _animation.value).toInt();
+          animatedSpots = data.spots.take(numOfPoints).toList();
+        });
+      });
+
+    _animationController.forward(); // Start the animation
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  final data = LineData();
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -17,6 +60,7 @@ class LineChartCard extends StatelessWidget {
             "Steps Overview",
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
+          const SizedBox(height: 8),
           AspectRatio(
             aspectRatio: 16 / 6,
             child: LineChart(
@@ -36,13 +80,14 @@ class LineChartCard extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (double value, TitleMeta meta) {
-                        return data.bottomTitle[value.toInt()] != null
+                        return data.bottomTitle.containsKey(value.toInt())
                             ? SideTitleWidget(
                                 axisSide: meta.axisSide,
                                 child: Text(
-                                    data.bottomTitle[value.toInt()].toString(),
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey[400])),
+                                  data.bottomTitle[value.toInt()]!,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey[400]),
+                                ),
                               )
                             : const SizedBox();
                       },
@@ -51,10 +96,12 @@ class LineChartCard extends StatelessWidget {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       getTitlesWidget: (double value, TitleMeta meta) {
-                        return data.leftTitle[value.toInt()] != null
-                            ? Text(data.leftTitle[value.toInt()].toString(),
+                        return data.leftTitle.containsKey(value.toInt())
+                            ? Text(
+                                data.leftTitle[value.toInt()]!,
                                 style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[400]))
+                                    fontSize: 12, color: Colors.grey[400]),
+                              )
                             : const SizedBox();
                       },
                       showTitles: true,
@@ -80,7 +127,7 @@ class LineChartCard extends StatelessWidget {
                       show: true,
                     ),
                     dotData: const FlDotData(show: false),
-                    spots: data.spots,
+                    spots: animatedSpots, // Using animated spots here
                   )
                 ],
                 minX: 0,
