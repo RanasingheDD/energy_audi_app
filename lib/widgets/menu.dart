@@ -65,7 +65,7 @@ class SideMenuWidget extends StatelessWidget {
                 ),
                 onTap: () {
                   onMenuSelect(index); 
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => item.page),
                   );

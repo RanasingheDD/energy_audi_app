@@ -1,18 +1,26 @@
 import 'package:energy_app/report/navigate_pdf.dart';
 import 'package:energy_app/widgets/button.dart';
+import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:energy_app/provider/report_data_provider.dart';// Import the updated report generator.
 
 class ReportPage extends StatelessWidget {
-  const ReportPage({Key? key}) : super(key: key);
+  ReportPage({Key? key}) : super(key: key);
+
+ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
+         leading: IconButton(
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+          icon: const Icon(Icons.menu, color: Colors.white),
+        ),
         title: const Text(
           "Room Reports",
           style: TextStyle(
@@ -21,6 +29,15 @@ class ReportPage extends StatelessWidget {
             color: Colors.white,
             letterSpacing: 1,
           ),
+        ),
+      ),
+      drawer: Drawer(
+        child: SideMenuWidget(
+          currentIndex: 1, 
+          onMenuSelect: (index) {
+          
+            print('Selected menu index: $index');
+          },
         ),
       ),
       body: Consumer<ReportDataProvider>(
