@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class ReportDataProvider extends ChangeNotifier{
 
-  Map<String , ReportData> _reportData = {};
+  final Map<String , ReportData> _reportData = {};
 
   Map<String , ReportData> get reportData {
     return {..._reportData};
@@ -18,7 +18,7 @@ void addData(String room, List<CardData> cardData) {
   final String current = cardData.firstWhere((card) => card.title == "Current").value;
   final String humidity = cardData.firstWhere((card) => card.title == "Humadity").value;
   final String brightness = cardData.firstWhere((card) => card.title == "Brightness").value;
-
+ final String temperature = cardData.firstWhere((card) => card.title == "Temperature").value;
   // Add the extracted values to the _reportData map
   _reportData.putIfAbsent(
     room,
@@ -28,6 +28,7 @@ void addData(String room, List<CardData> cardData) {
       hum: humidity,
       light: brightness,
       room: room,
+      tempure:temperature,
     ),
   );
 

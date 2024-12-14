@@ -48,7 +48,10 @@ class _HomePageState extends State<HomePage> {
               ? const Text(
                   'Energy Audit Dashboard',
                   key: ValueKey("title"),
-                  style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 )
               : const SizedBox(),
         ),
@@ -56,7 +59,7 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: Drawer(
         child: SideMenuWidget(
-          currentIndex: 0, 
+          currentIndex: 0,
           onMenuSelect: (index) {
             print('Selected menu index: $index');
           },
@@ -73,12 +76,13 @@ class _HomePageState extends State<HomePage> {
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: GridView.builder(
                       shrinkWrap: true,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
                       ),
-                      physics: const NeverScrollableScrollPhysics(),
+                      // physics: const NeverScrollableScrollPhysics(),
                       itemCount: cards.length,
                       itemBuilder: (context, index) {
                         final CardData card = cards[index];
@@ -102,11 +106,14 @@ class _HomePageState extends State<HomePage> {
                         try {
                           reportData.addData("Room 01", cards);
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Room 01 added to report')),
+                            const SnackBar(
+                                content: Text('Room 01 added to report')),
                           );
                         } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Failed to add Room 01 to report')),
+                            const SnackBar(
+                                content:
+                                    Text('Failed to add Room 01 to report')),
                           );
                         }
                       },

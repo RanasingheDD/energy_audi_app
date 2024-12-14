@@ -6,10 +6,10 @@ class SideMenuWidget extends StatelessWidget {
   final Function(int) onMenuSelect;
 
   const SideMenuWidget({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onMenuSelect,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,7 @@ class SideMenuWidget extends StatelessWidget {
                 },
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
