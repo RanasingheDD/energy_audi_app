@@ -78,6 +78,8 @@ class ReportPage extends StatelessWidget {
                                   style: const TextStyle(color: Colors.white)),
                               Text("Current: ${data.current} A",
                                   style: const TextStyle(color: Colors.white)),
+                              Text("Power Factor: ${data.pF} ",
+                                  style: const TextStyle(color: Colors.white)),
                               Text("Humidity: ${data.hum} %",
                                   style: const TextStyle(color: Colors.white)),
                               Text("Light: ${data.light} mW/m^2",

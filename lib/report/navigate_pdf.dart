@@ -81,6 +81,7 @@ class ReportGeneratorPage {
                       'Room',
                       'Voltage (V)',
                       'Current (A)',
+                      'Power Factor'
                       'Humidity (%)',
                       'Light Intensity (mW/m²)',
                       'Temperature (°C)'
@@ -90,6 +91,7 @@ class ReportGeneratorPage {
                               data.room,
                               data.volt,
                               data.current,
+                              data.pF,
                               data.hum,
                               data.light,
                               data.tempure

@@ -89,7 +89,7 @@ class ReportListPage extends StatelessWidget {
         return {
           'name': file.name,
           'url': storage.getPublicUrl(
-              'report/${file.name}'), // Include the folder path in the public URL.
+              'reports/${file.name}'), // Include the folder path in the public URL.
         };
       }).toList();
     } catch (e) {

@@ -76,13 +76,13 @@ class _HomePageState extends State<HomePage> {
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: GridView.builder(
                       shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                      ),
-                      // physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Number of columns
+                      crossAxisSpacing: 8,
+                      mainAxisSpacing: 8,
+                      childAspectRatio: 2.1, // Adjust this for card height/width ratio
+                    ),
+                     // physics: const NeverScrollableScrollPhysics(),
                       itemCount: cards.length,
                       itemBuilder: (context, index) {
                         final CardData card = cards[index];

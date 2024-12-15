@@ -16,6 +16,7 @@ void addData(String room, List<CardData> cardData) {
   // Extract values from the cardData list
   final String voltage = cardData.firstWhere((card) => card.title == "Voltage").value;
   final String current = cardData.firstWhere((card) => card.title == "Current").value;
+  final String powerFactor = cardData.firstWhere((card) => card.title == "Power Factor").value;
   final String humidity = cardData.firstWhere((card) => card.title == "Humadity").value;
   final String brightness = cardData.firstWhere((card) => card.title == "Brightness").value;
  final String temperature = cardData.firstWhere((card) => card.title == "Temperature").value;
@@ -25,6 +26,7 @@ void addData(String room, List<CardData> cardData) {
     () => ReportData(
       volt: voltage,
       current: current,
+      pF: powerFactor,
       hum: humidity,
       light: brightness,
       room: room,
