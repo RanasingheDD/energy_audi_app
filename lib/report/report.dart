@@ -126,7 +126,7 @@ class ReportPage extends StatelessWidget {
 
                         // Define the file path
                         final fileName =
-                            'reports/${DateTime.now().millisecondsSinceEpoch}.pdf';
+                            'reports/${DateTime.now()}.pdf';
 
                         // Upload the file to Supabase Storage
                         final response =
