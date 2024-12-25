@@ -29,8 +29,8 @@ class CardPage extends StatelessWidget {
             children: [
               Image.asset(
                 card.image_url,
-                width: 20, // Smaller image size
-                height: 20,
+                width: 15, // Smaller image size
+                height: 15,
               ),
               const SizedBox(height: 8),
               Text(

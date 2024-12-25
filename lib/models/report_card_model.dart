@@ -5,7 +5,7 @@ class ReportData{
   String light;
   String room;
   String tempure;
-  String pF;
+  String power;
   
   ReportData({
     required this.volt, 
@@ -14,6 +14,6 @@ class ReportData{
     required this.light,
     required this.room, 
     required this.tempure,
-    required this.pF
+    required this.power
   });
 }

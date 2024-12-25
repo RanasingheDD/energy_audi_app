@@ -5,7 +5,6 @@ import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:io';
 
 class ReportPage extends StatelessWidget {
   ReportPage({super.key});
@@ -78,11 +77,11 @@ class ReportPage extends StatelessWidget {
                                   style: const TextStyle(color: Colors.white)),
                               Text("Current: ${data.current} A",
                                   style: const TextStyle(color: Colors.white)),
-                              Text("Power Factor: ${data.pF} ",
+                              Text("Power : ${data.power} W",
                                   style: const TextStyle(color: Colors.white)),
                               Text("Humidity: ${data.hum} %",
                                   style: const TextStyle(color: Colors.white)),
-                              Text("Light: ${data.light} mW/m^2",
+                              Text("Light: ${data.light} lux",
                                   style: const TextStyle(color: Colors.white)),
                               Text("Temperature: ${data.tempure} C",
                                   style: const TextStyle(color: Colors.white)),

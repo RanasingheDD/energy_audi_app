@@ -11,7 +11,7 @@ class ReportGeneratorPage {
     final pdf = pw.Document();
 
     // Define text styles for the table
-    final tableStyle = const pw.TextStyle(
+    const tableStyle = pw.TextStyle(
       color: PdfColors.black,
       fontSize: 12,
     );
@@ -87,16 +87,16 @@ class ReportGeneratorPage {
                         'Room',
                         'Voltage (V)',
                         'Current (A)',
-                        'Power Factor',
+                        'Power (W)',
                         'Humidity (%)',
-                        'Light Intensity (mW/m²)',
+                        'Light Intensity (lux)',
                         'Temperature (°C)',
                       ],
                       ...reportData.values.map((data) => [
                             data.room,
                             data.volt.toString(),
                             data.current.toString(),
-                            data.pF.toString(),
+                            data.power.toString(),
                             data.hum.toString(),
                             data.light.toString(),
                             data.tempure.toString(),

@@ -16,7 +16,8 @@ class ReportGeneratorPage {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text("Environmental Report",
-                  style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 16),
               ...reportData.values.map((data) {
                 return pw.Text(
@@ -31,14 +32,15 @@ class ReportGeneratorPage {
 
       // Save the PDF to a temporary file
       final output = await getTemporaryDirectory();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;  // Dynamic file name
+      final timestamp =
+          DateTime.now().millisecondsSinceEpoch; // Dynamic file name
       final file = File("${output.path}/environmental_report_$timestamp.pdf");
       await file.writeAsBytes(await pdf.save());
-      
+
       return file;
     } catch (e) {
       print("Error generating PDF: $e");
-      rethrow;  // Optionally rethrow to handle higher up in the call stack
+      rethrow; // Optionally rethrow to handle higher up in the call stack
     }
   }
 }
