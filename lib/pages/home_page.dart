@@ -29,7 +29,7 @@ List<CardData> cards = [
   CardData(
       title: "Humidity", image_url: "assets/hum.png", value: "0", symbol: "%"),
   CardData(
-      title: "Brightness",
+      title: "Light",
       image_url: "assets/bright.png",
       value: "0",
       symbol: "lux"),

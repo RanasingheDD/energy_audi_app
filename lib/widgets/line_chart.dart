@@ -73,99 +73,102 @@ class _LineChartCardState extends State<LineChartCard> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Steps Overview",
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          isLoading
-              ? const Center(child: CircularProgressIndicator()) // Show loading spinner
-              : AspectRatio(
-                  aspectRatio: 16 / 6,
-                  child: LineChart(
-                 LineChartData(
-  lineTouchData: const LineTouchData(handleBuiltInTouches: true),
-  gridData: const FlGridData(show: true), // Show gridlines for debugging
-  titlesData: FlTitlesData(
-    rightTitles: const AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    topTitles: const AxisTitles(
-      sideTitles: SideTitles(showTitles: false),
-    ),
-    bottomTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true,
-        reservedSize: 22,
-        interval: ((maxX ?? 120) - (minX ?? 0)) / 10, // Dynamic interval
-        getTitlesWidget: (value, meta) {
-          return data.bottomTitle.containsKey(value.toInt())
-              ? SideTitleWidget(
-                  axisSide: meta.axisSide,
-                  child: Text(
-                    data.bottomTitle[value.toInt()]!,
+    return RefreshIndicator(
+      onRefresh: fetchData,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Power Visualizer",
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
+            ),
+            const SizedBox(height: 8),
+            isLoading
+                ? const Center(child: CircularProgressIndicator()) // Show loading spinner
+                : AspectRatio(
+                    aspectRatio: 16 / 6,
+                    child: LineChart(
+                   LineChartData(
+        lineTouchData: const LineTouchData(handleBuiltInTouches: true),
+        gridData: const FlGridData(show: true), // Show gridlines for debugging
+        titlesData: FlTitlesData(
+      rightTitles: const AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      topTitles: const AxisTitles(
+        sideTitles: SideTitles(showTitles: false),
+      ),
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 22,
+          interval: ((maxX ?? 120) - (minX ?? 0)) / 10, // Dynamic interval
+          getTitlesWidget: (value, meta) {
+            return data.bottomTitle.containsKey(value.toInt())
+                ? SideTitleWidget(
+                    axisSide: meta.axisSide,
+                    child: Text(
+                      data.bottomTitle[value.toInt()]!,
+                      style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    ),
+                  )
+                : Text(value.toStringAsFixed(1), // Default label
+                    style: TextStyle(fontSize: 10, color: Colors.grey[300]));
+          },
+        ),
+      ),
+      leftTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 40,
+          interval: ((maxY ?? 105) - (minY ?? -5)) / 10, // Dynamic interval
+          getTitlesWidget: (value, meta) {
+            return data.leftTitle.containsKey(value.toInt())
+                ? Text(
+                    data.leftTitle[value.toInt()]!,
                     style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                  )
+                : Text(value.toStringAsFixed(1), // Default label
+                    style: TextStyle(fontSize: 10, color: Colors.grey[300]));
+          },
+        ),
+      ),
+        ),
+        borderData: FlBorderData(
+      show: true,
+      border: Border.all(color: const Color(0xff37434d), width: 1),
+        ),
+        lineBarsData: [
+      LineChartBarData(
+        color: Colors.white,
+        barWidth: 2.5,
+        belowBarData: BarAreaData(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white.withOpacity(0.5),
+              Colors.transparent,
+            ],
+          ),
+          show: true,
+        ),
+        dotData: const FlDotData(show: false),
+        spots: animatedSpots,
+      ),
+        ],
+        minX: minX ?? 0,
+        maxX: maxX ?? 120,
+        minY: minY ?? -5,
+        maxY: maxY ?? 105,
+      )
+      
+                    ),
                   ),
-                )
-              : Text(value.toStringAsFixed(1), // Default label
-                  style: TextStyle(fontSize: 10, color: Colors.grey[300]));
-        },
-      ),
-    ),
-    leftTitles: AxisTitles(
-      sideTitles: SideTitles(
-        showTitles: true,
-        reservedSize: 40,
-        interval: ((maxY ?? 105) - (minY ?? -5)) / 10, // Dynamic interval
-        getTitlesWidget: (value, meta) {
-          return data.leftTitle.containsKey(value.toInt())
-              ? Text(
-                  data.leftTitle[value.toInt()]!,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-                )
-              : Text(value.toStringAsFixed(1), // Default label
-                  style: TextStyle(fontSize: 10, color: Colors.grey[300]));
-        },
-      ),
-    ),
-  ),
-  borderData: FlBorderData(
-    show: true,
-    border: Border.all(color: const Color(0xff37434d), width: 1),
-  ),
-  lineBarsData: [
-    LineChartBarData(
-      color: Colors.white,
-      barWidth: 2.5,
-      belowBarData: BarAreaData(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Colors.white.withOpacity(0.5),
-            Colors.transparent,
           ],
         ),
-        show: true,
-      ),
-      dotData: const FlDotData(show: false),
-      spots: animatedSpots,
-    ),
-  ],
-  minX: minX ?? 0,
-  maxX: maxX ?? 120,
-  minY: minY ?? -5,
-  maxY: maxY ?? 105,
-)
-
-                  ),
-                ),
-        ],
       ),
     );
   }
