@@ -34,8 +34,8 @@ class ReportDataProvider extends ChangeNotifier {
     ).value;
 
     final String brightness = cardData.firstWhere(
-      (card) => card.title == "Brightness",
-      orElse: () => CardData(title: "Brightness", value: "0", symbol: "lux", image_url: 'asseets/voltage.png'),
+      (card) => card.title == "Light",
+      orElse: () => CardData(title: "Light", value: "0", symbol: "lux", image_url: 'asseets/voltage.png'),
     ).value;
 
     final String temperature = cardData.firstWhere(

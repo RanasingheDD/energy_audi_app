@@ -42,7 +42,7 @@ class SensorDataService {
         }
 
         // Calculate averages
-        int count = sensorData.length;
+        int count = sensorData.length-1;
         if (count == 0) throw Exception('No data available.');
 
         // Calculate the averages and return them with 2 decimal points

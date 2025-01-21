@@ -64,30 +64,18 @@ class _HomePageState extends State<HomePage> {
     try {
       final data = await _sensorDataService.fetchSensorData();
       setState(() {
-        averagePower = _calculateAveragePower(data);
+        //averagePower = _calculateAveragePower(data);
 
         cards[0].value = data.isNotEmpty ? data[0]['voltage'].toString() : "0";
         cards[1].value = data.isNotEmpty ? data[0]['current'].toString() : "0";
         cards[2].value = data.isNotEmpty ? data[0]['power'].toString() : "0";
-        cards[3].value =
-            data.isNotEmpty ? data[0]['temperature'].toString() : "0";
+        cards[3].value = data.isNotEmpty ? data[0]['temperature'].toString() : "0";
         cards[4].value = data.isNotEmpty ? data[0]['humidity'].toString() : "0";
         cards[5].value = data.isNotEmpty ? data[0]['light'].toString() : "0";
       });
     } catch (e) {
       print('Error loading sensor data: $e');
     }
-  }
-
-  double _calculateAveragePower(List<Map<String, dynamic>> data) {
-    if (data.isEmpty) return 0.0;
-
-    double totalPower = 0.0;
-    for (var entry in data) {
-      totalPower += entry['power'];
-    }
-
-    return totalPower / data.length;
   }
 
   void _showRoomNameDialog() {
@@ -173,13 +161,15 @@ class _HomePageState extends State<HomePage> {
   Future<void> _deleteSupabaseData(BuildContext context) async {
     try {
       print("1234");
-      // Replace 'your_table_name' with your Supabase table name
       final response = await supabase.from('SensorData').delete().neq('id', '01e3cb9c-0979-4f2b-87b8-7dae3417fd1c');
-      print("123"); // Adjust the condition as needed
-      if (response.error == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("All data deleted successfully!")),
+      print("123"); 
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("All data deleted successfully!")),
         );
+     
+      if (response.error == null) {
+      
       } else {
         throw response.error!.message;
       }
@@ -246,7 +236,7 @@ class _HomePageState extends State<HomePage> {
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
                         childAspectRatio:
-                            1.7, // Adjust this for card height/width ratio
+                            1.5, // Adjust this for card height/width ratio
                       ),
                       // physics: const NeverScrollableScrollPhysics(),
                       itemCount: cards.length,
@@ -263,6 +253,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const SizedBox(height: 10),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     BUTTONWIDGET(
@@ -271,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                       additem: _showRoomNameDialog
                     ),
                     BUTTONWIDGET(
-                      name: "Delete database data",
+                      name: "Delete Data",
                       color: Colors.red,
                       additem: () => _confirmAndDeleteDatabase(context),
 
