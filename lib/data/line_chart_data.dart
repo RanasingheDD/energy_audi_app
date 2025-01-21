@@ -1,4 +1,3 @@
-import 'package:energy_app/superbase/superbase_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:supabase_flutter/supabase_flutter.dart'; // Ensure Supabase is imported
 
@@ -13,7 +12,8 @@ class LineData {
           .from('SensorData') // Table name
           .select('power') // Selecting 'power' column
           .limit(100) // Optional: limit the number of records if needed
-          .order('created_at', ascending: false); // Optional: order by creation date
+          .order('created_at',
+              ascending: false); // Optional: order by creation date
 
       if (response is List) {
         // Return the fetched data directly as Map<String, dynamic>
@@ -38,8 +38,10 @@ class LineData {
         spots = powerData.asMap().entries.map((entry) {
           int index = entry.key; // Sequential index for X-axis
           var row = entry.value;
-          double power = (row['power'] ?? 0.0).toDouble(); // Default to 0.0 if null and cast to double
-          return FlSpot(index.toDouble(), power); // Use index as X and power as Y
+          double power = (row['power'] ?? 0.0)
+              .toDouble(); // Default to 0.0 if null and cast to double
+          return FlSpot(
+              index.toDouble(), power); // Use index as X and power as Y
         }).toList();
 
         print('Mapped FlSpot data: $spots');

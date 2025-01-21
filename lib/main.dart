@@ -2,6 +2,7 @@ import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/provider/report_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:energy_app/pages/ThemeProvider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -13,8 +14,15 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ReportDataProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => ReportDataProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => ThemeProvider(), // Add ThemeProvider
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -25,9 +33,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      theme: ThemeData(
+        brightness:
+            themeProvider.isDarkMode ? Brightness.dark : Brightness.light,
+        primaryColor: themeProvider.isDarkMode
+            ? const Color.fromARGB(255, 21, 17, 37)
+            : Colors.white,
+      ),
+      home: const HomePage(),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:energy_app/pages/ThemeProvider.dart';
 
 // Initial cards data
 List<CardData> cards = [
@@ -69,7 +70,8 @@ class _HomePageState extends State<HomePage> {
         cards[0].value = data.isNotEmpty ? data[0]['voltage'].toString() : "0";
         cards[1].value = data.isNotEmpty ? data[0]['current'].toString() : "0";
         cards[2].value = data.isNotEmpty ? data[0]['power'].toString() : "0";
-        cards[3].value = data.isNotEmpty ? data[0]['temperature'].toString() : "0";
+        cards[3].value =
+            data.isNotEmpty ? data[0]['temperature'].toString() : "0";
         cards[4].value = data.isNotEmpty ? data[0]['humidity'].toString() : "0";
         cards[5].value = data.isNotEmpty ? data[0]['light'].toString() : "0";
       });
@@ -161,15 +163,17 @@ class _HomePageState extends State<HomePage> {
   Future<void> _deleteSupabaseData(BuildContext context) async {
     try {
       print("1234");
-      final response = await supabase.from('SensorData').delete().neq('id', '01e3cb9c-0979-4f2b-87b8-7dae3417fd1c');
-      print("123"); 
-      
+      final response = await supabase
+          .from('SensorData')
+          .delete()
+          .neq('id', '01e3cb9c-0979-4f2b-87b8-7dae3417fd1c');
+      print("123");
+
       ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("All data deleted successfully!")),
-        );
-     
+        const SnackBar(content: Text("All data deleted successfully!")),
+      );
+
       if (response.error == null) {
-      
       } else {
         throw response.error!.message;
       }
@@ -183,6 +187,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       key: _scaffoldKey, // Assign the GlobalKey
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
@@ -205,7 +211,9 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 )
-              : const SizedBox(height: 20,),
+              : const SizedBox(
+                  height: 20,
+                ),
         ),
         centerTitle: true,
       ),
@@ -257,15 +265,13 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     BUTTONWIDGET(
-                      name: "Add to Report",
-                      color: Colors.green,
-                      additem: _showRoomNameDialog
-                    ),
+                        name: "Add to Report",
+                        color: Colors.green,
+                        additem: _showRoomNameDialog),
                     BUTTONWIDGET(
                       name: "Delete Data",
                       color: Colors.red,
                       additem: () => _confirmAndDeleteDatabase(context),
-
                     ),
                   ],
                 ),

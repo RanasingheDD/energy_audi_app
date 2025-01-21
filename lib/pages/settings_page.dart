@@ -1,5 +1,7 @@
-import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:energy_app/pages/ThemeProvider.dart';
+import '../widgets/menu.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -10,8 +12,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  bool isDarkMode = true;
   bool isPushNotificationEnabled = true;
   bool isSoundEnabled = true;
   bool isVibrationEnabled = true;
@@ -24,64 +24,39 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _getAppVersion() async {
-    // Simulating fetching the app version
     setState(() {
       appVersion = '1.0.0'; // Example version
     });
   }
 
-  void _toggleTheme(bool value) {
-    setState(() {
-      isDarkMode = value;
-    });
-    // Save the theme preference using a state management solution or SharedPreferences
-  }
-
-  void _togglePushNotification(bool value) {
-    setState(() {
-      isPushNotificationEnabled = value;
-    });
-  }
-
-  void _toggleSound(bool value) {
-    setState(() {
-      isSoundEnabled = value;
-    });
-  }
-
-  void _toggleVibration(bool value) {
-    setState(() {
-      isVibrationEnabled = value;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      backgroundColor: isDarkMode
-            ? const Color.fromARGB(255, 21, 17, 37)
-            : Colors.white,
+      backgroundColor: themeProvider.isDarkMode
+          ? const Color.fromARGB(255, 21, 17, 37)
+          : Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
         title: const Text('Settings'),
         centerTitle: true,
-        backgroundColor: isDarkMode
+        backgroundColor: themeProvider.isDarkMode
             ? const Color.fromARGB(255, 21, 17, 37)
             : Colors.white,
-        foregroundColor: isDarkMode ? Colors.white : Colors.black,
+        foregroundColor: themeProvider.isDarkMode ? Colors.white : Colors.black,
         leading: IconButton(
           icon: Icon(
             Icons.menu,
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: themeProvider.isDarkMode ? Colors.white : Colors.black,
           ),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
       ),
       drawer: Drawer(
         child: SideMenuWidget(
-          currentIndex: 2, 
+          currentIndex: 2,
           onMenuSelect: (index) {
-          
             print('Selected menu index: $index');
           },
         ),
@@ -93,32 +68,38 @@ class _SettingsPageState extends State<SettingsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildSwitchTile(
-                title: isDarkMode ? 'Dark Mode' : "Light Mode",
-                value: isDarkMode,
-                onChanged: _toggleTheme,
+                title: themeProvider.isDarkMode ? 'Dark Mode' : 'Light Mode',
+                value: themeProvider.isDarkMode,
+                onChanged: themeProvider.toggleTheme,
               ),
               const SizedBox(height: 20),
               _buildSwitchTile(
                 title: 'Push Notifications',
                 value: isPushNotificationEnabled,
-                onChanged: _togglePushNotification,
+                onChanged: (value) => setState(() {
+                  isPushNotificationEnabled = value;
+                }),
               ),
               const SizedBox(height: 20),
               _buildSwitchTile(
                 title: 'Notification Sound',
                 value: isSoundEnabled,
-                onChanged: _toggleSound,
+                onChanged: (value) => setState(() {
+                  isSoundEnabled = value;
+                }),
               ),
               const SizedBox(height: 20),
               _buildSwitchTile(
                 title: 'Notification Vibration',
                 value: isVibrationEnabled,
-                onChanged: _toggleVibration,
+                onChanged: (value) => setState(() {
+                  isVibrationEnabled = value;
+                }),
               ),
               const SizedBox(height: 20),
-              _buildAboutSection(),
+              _buildAboutSection(themeProvider.isDarkMode),
               const SizedBox(height: 20),
-              _buildAppVersion(),
+              _buildAppVersion(themeProvider.isDarkMode),
             ],
           ),
         ),
@@ -137,7 +118,9 @@ class _SettingsPageState extends State<SettingsPage> {
         Text(
           title,
           style: TextStyle(
-            color: isDarkMode ? Colors.white : Colors.black,
+            color: Provider.of<ThemeProvider>(context).isDarkMode
+                ? Colors.white
+                : Colors.black,
             fontSize: 16,
           ),
         ),
@@ -151,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildAboutSection() {
+  Widget _buildAboutSection(bool isDarkMode) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -175,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget _buildAppVersion() {
+  Widget _buildAppVersion(bool isDarkMode) {
     return Row(
       children: [
         Text(
