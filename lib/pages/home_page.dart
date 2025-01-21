@@ -30,7 +30,7 @@ List<CardData> cards = [
   CardData(
       title: "Humidity", image_url: "assets/hum.png", value: "0", symbol: "%"),
   CardData(
-      title: "Brightness",
+      title: "Light",
       image_url: "assets/bright.png",
       value: "0",
       symbol: "lux"),
@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      key: _scaffoldKey, // Assign the GlobalKey
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
@@ -215,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 )
-              : const SizedBox(height: 20),
+              : const SizedBox(height: 20,),
         ),
         centerTitle: true,
       ),
@@ -232,20 +232,23 @@ class _HomePageState extends State<HomePage> {
           builder: (context, reportData, child) {
             return Column(
               children: [
+                //SizedBox(height: 40,),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: GridView.builder(
                       shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      physics: NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                        crossAxisCount: 2, // Number of columns
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
-                        childAspectRatio: 1.7,
+                        childAspectRatio:
+                            1.7, // Adjust this for card height/width ratio
                       ),
+                      // physics: const NeverScrollableScrollPhysics(),
                       itemCount: cards.length,
                       itemBuilder: (context, index) {
                         final CardData card = cards[index];
@@ -265,12 +268,13 @@ class _HomePageState extends State<HomePage> {
                     BUTTONWIDGET(
                       name: "Add to Report",
                       color: Colors.green,
-                      additem: _showRoomNameDialog, // Show the dialog
+                      additem: _showRoomNameDialog
                     ),
                     BUTTONWIDGET(
                       name: "Delete database data",
                       color: Colors.red,
                       additem: () => _confirmAndDeleteDatabase(context),
+
                     ),
                   ],
                 ),
