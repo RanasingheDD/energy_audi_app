@@ -7,6 +7,7 @@ import 'package:energy_app/widgets/line_chart.dart';
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Initial cards data
 List<CardData> cards = [
@@ -44,7 +45,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final SensorDataService _sensorDataService = SensorDataService();
+  final supabase = Supabase.instance.client;
   double averagePower = 0.0;
+  final TextEditingController _roomNameController = TextEditingController();
 
   @override
   void initState() {
@@ -59,31 +62,17 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _loadSensorData() async {
     try {
-      // Fetch the sensor data from the service
       final data = await _sensorDataService.fetchSensorData();
-
-      // Set the state after fetching and calculating values
       setState(() {
-        // Update averagePower with the calculated value
         averagePower = _calculateAveragePower(data);
 
-        // Update the 'Power' card value// Power card
-
-        // Update other cards with respective values
-        cards[0].value = data.isNotEmpty
-            ? data[0]['voltage'].toString()
-            : "0"; // Voltage card
+        cards[0].value = data.isNotEmpty ? data[0]['voltage'].toString() : "0";
         cards[1].value = data.isNotEmpty ? data[0]['current'].toString() : "0";
         cards[2].value = data.isNotEmpty ? data[0]['power'].toString() : "0";
-        cards[3].value = data.isNotEmpty
-            ? data[0]['temperature'].toString()
-            : "0"; // Temperature card
-        cards[4].value = data.isNotEmpty
-            ? data[0]['humidity'].toString()
-            : "0"; // Humidity card
-        cards[5].value = data.isNotEmpty
-            ? data[0]['light'].toString()
-            : "0"; // Brightness card
+        cards[3].value =
+            data.isNotEmpty ? data[0]['temperature'].toString() : "0";
+        cards[4].value = data.isNotEmpty ? data[0]['humidity'].toString() : "0";
+        cards[5].value = data.isNotEmpty ? data[0]['light'].toString() : "0";
       });
     } catch (e) {
       print('Error loading sensor data: $e');
@@ -101,13 +90,111 @@ class _HomePageState extends State<HomePage> {
     return totalPower / data.length;
   }
 
+  void _showRoomNameDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Enter Room Name'),
+          content: TextField(
+            controller: _roomNameController,
+            decoration: const InputDecoration(hintText: 'Room Name'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                String roomName = _roomNameController.text.isNotEmpty
+                    ? _roomNameController.text
+                    : 'Room 01'; // Default name if not provided
+                // Add the room to the report with the name
+                try {
+                  print(cards[2].value);
+                  Provider.of<ReportDataProvider>(context, listen: false)
+                      .addData(roomName, cards);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('$roomName added to report')),
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Failed to add room to report'),
+                    ),
+                  );
+                }
+                // Close the dialog
+                Navigator.of(context).pop();
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _confirmAndDeleteDatabase(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Delete Database Data"),
+          content: const Text(
+              "Are you sure you want to delete all data from the database? This action cannot be undone."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteSupabaseData(context);
+                Navigator.of(context).pop(); // Close the dialog after deleting
+              },
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteSupabaseData(BuildContext context) async {
+    try {
+      print("1234");
+      // Replace 'your_table_name' with your Supabase table name
+      final response = await supabase.from('SensorData').delete().neq('id', '01e3cb9c-0979-4f2b-87b8-7dae3417fd1c');
+      print("123"); // Adjust the condition as needed
+      if (response.error == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("All data deleted successfully!")),
+        );
+      } else {
+        throw response.error!.message;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _showTitle = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey, // Assign the GlobalKey
+      key: _scaffoldKey,
       backgroundColor: const Color.fromARGB(255, 21, 17, 37),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 21, 17, 37),
@@ -128,7 +215,7 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold),
                 )
-              : const SizedBox(height: 20,),
+              : const SizedBox(height: 20),
         ),
         centerTitle: true,
       ),
@@ -145,23 +232,20 @@ class _HomePageState extends State<HomePage> {
           builder: (context, reportData, child) {
             return Column(
               children: [
-                //SizedBox(height: 40,),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.5,
                     child: GridView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Number of columns
+                        crossAxisCount: 2,
                         crossAxisSpacing: 8,
                         mainAxisSpacing: 8,
-                        childAspectRatio:
-                            1.7, // Adjust this for card height/width ratio
+                        childAspectRatio: 1.7,
                       ),
-                      // physics: const NeverScrollableScrollPhysics(),
                       itemCount: cards.length,
                       itemBuilder: (context, index) {
                         final CardData card = cards[index];
@@ -180,30 +264,13 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     BUTTONWIDGET(
                       name: "Add to Report",
-                      color: Colors.red,
-                      additem: () {
-                        try {
-                          print(cards[2].value);
-                          reportData.addData("Room 01", cards);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Room 01 added to report')),
-                          );
-                        } catch (e) {
-                          // Check if the card values are properly updated
-
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                    Text('Failed to add Room 01 to report')),
-                          );
-                        }
-                      },
+                      color: Colors.green,
+                      additem: _showRoomNameDialog, // Show the dialog
                     ),
                     BUTTONWIDGET(
-                      name: "New Task",
-                      color: Colors.green,
-                      additem: () {},
+                      name: "Delete database data",
+                      color: Colors.red,
+                      additem: () => _confirmAndDeleteDatabase(context),
                     ),
                   ],
                 ),

@@ -1,6 +1,5 @@
 import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/models/menu_model.dart';
-import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/pages/settings_page.dart';
 import 'package:energy_app/report/fetch_report.dart';
 import 'package:energy_app/report/report.dart';

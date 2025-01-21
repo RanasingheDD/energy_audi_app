@@ -13,21 +13,17 @@ class SensorDataService {
           .order('created_at', ascending: false);  // Optional: order by creation date if applicable
 
       // Ensure response data is a List
-      if (response is PostgrestList) {
-        return (response as PostgrestList).map((data) {
-          return {
-            'power': data['power'],
-            'voltage': data['voltage'],
-            'current': data['current'],
-            'temperature': data['temperature'],
-            'humidity': data['humidity'],
-            'light': data['light'],
-          };
-        }).toList();
-      } else {
-        throw Exception('Unexpected response type.');
-      }
-    } catch (e) {
+      return (response).map((data) {
+        return {
+          'power': data['power'],
+          'voltage': data['voltage'],
+          'current': data['current'],
+          'temperature': data['temperature'],
+          'humidity': data['humidity'],
+          'light': data['light'],
+        };
+      }).toList();
+        } catch (e) {
       // Improved error handling
       print('Error fetching sensor data: $e');
       throw Exception("Failed to fetch sensor data: $e");

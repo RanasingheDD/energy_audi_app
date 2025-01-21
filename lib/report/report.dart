@@ -141,14 +141,14 @@ class ReportPage extends StatelessWidget {
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Report0 uploaded successfully!')),
+                              content: Text('Report uploaded successfully!')),
                         );
 
                         print("Uploaded report URL: $publicUrl");
                       } catch (e) {
                         print('Error: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to upload report0.')),
+                          const SnackBar(content: Text('Failed to upload report.')),
                         );
                       } finally {
                         // Dismiss loading indicator

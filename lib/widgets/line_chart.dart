@@ -102,7 +102,10 @@ class _LineChartCardState extends State<LineChartCard> with SingleTickerProvider
       sideTitles: SideTitles(
         showTitles: true,
         reservedSize: 22,
-        interval: ((maxX ?? 120) - (minX ?? 0)) / 10, // Dynamic interval
+        interval: ((maxX ?? 120) - (minX ?? 0.1)) / 10 > 0
+    ? ((maxX ?? 120) - (minX ?? 0.1)) / 10
+    : 1, // Ensure interval is at least 1
+// Dynamic interval
         getTitlesWidget: (value, meta) {
           return data.bottomTitle.containsKey(value.toInt())
               ? SideTitleWidget(
@@ -121,7 +124,10 @@ class _LineChartCardState extends State<LineChartCard> with SingleTickerProvider
       sideTitles: SideTitles(
         showTitles: true,
         reservedSize: 40,
-        interval: ((maxY ?? 105) - (minY ?? -5)) / 10, // Dynamic interval
+        interval: ((maxX ?? 120) - (minX ?? 0.1)) / 10 > 0
+    ? ((maxX ?? 120) - (minX ?? 0.1)) / 10
+    : 1, // Ensure interval is at least 1
+ // Dynamic interval
         getTitlesWidget: (value, meta) {
           return data.leftTitle.containsKey(value.toInt())
               ? Text(
@@ -157,7 +163,7 @@ class _LineChartCardState extends State<LineChartCard> with SingleTickerProvider
       spots: animatedSpots,
     ),
   ],
-  minX: minX ?? 0,
+  minX: minX ?? 0.1,
   maxX: maxX ?? 120,
   minY: minY ?? -5,
   maxY: maxY ?? 105,
