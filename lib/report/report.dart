@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'package:energy_app/provider/report_data_provider.dart';
 import 'package:energy_app/report/navigate_pdf.dart';
 import 'package:energy_app/widgets/button.dart';
 import 'package:energy_app/widgets/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ReportPage extends StatelessWidget {
@@ -97,11 +99,6 @@ class ReportPage extends StatelessWidget {
                     name: "Generate & Upload Report",
                     color: Colors.green,
                     additem: () async {
-                      final reportData = Provider.of<ReportDataProvider>(
-                              context,
-                              listen: false)
-                          .reportData;
-
                       try {
                         // Show loading indicator
                         showDialog(
@@ -111,44 +108,66 @@ class ReportPage extends StatelessWidget {
                               const Center(child: CircularProgressIndicator()),
                         );
 
-                        // Generate the PDF file
-                        final pdfFile = await ReportGeneratorPage()
-                            .generateAndShowPdfReport(context, reportData);
+                        // API URL
+                        final apiUrl =
+                            'https://e403-112-135-64-46.ngrok-free.app/generate-pdf';
 
-                        if (pdfFile == null) {
-                          throw Exception(
-                              "Failed to generate a valid PDF file.");
-                        }
+                        // Accessing dynamic data from ReportDataProvider
+                        final reportData = context
+                            .read<ReportDataProvider>()
+                            .reportData
+                            .values;
 
-                        // Initialize Supabase client
-                        final supabase = Supabase.instance.client;
+                        // Preparing the payload dynamically
+                        final details = reportData.map((data) {
+                          return {
+                            "room": data.room,
+                            "voltage": data.volt,
+                            "current": data.current,
+                            "power": data.power,
+                            "humidity": double.parse(data.hum.toString()),  // Converting to int
+                            "light_intensity":double.parse(data.light.toString()),  // Converting to int
+                            "temperature": double.parse(data.tempure.toString()),  // Converting to int
+                          };
+                        }).toList();
 
-                        // Define the file path
-                        final fileName =
-                            'reports/${DateTime.now()}.pdf';
+                        final payload = {
+                          "room_number":
+                              "010", // Replace with dynamic data if needed
+                          "date": DateTime.now()
+                              .toIso8601String()
+                              .split('T')[0], // Current date
+                          "time":
+                              TimeOfDay.now().format(context), // Current time
+                          "details": details,
+                        };
 
-                        // Upload the file to Supabase Storage
-                        final response =
-                            await supabase.storage.from('reports').upload(
-                                  fileName,
-                                  pdfFile,
-                                );
-
-                        // Get the public URL
-                        final publicUrl = supabase.storage
-                            .from('reports')
-                            .getPublicUrl(fileName);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Report uploaded successfully!')),
+                        // Send the POST request
+                        final response = await http.post(
+                          Uri.parse(apiUrl),
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: jsonEncode(payload),
                         );
 
-                        print("Uploaded report URL: $publicUrl");
+                        // Handle the response
+                        if (response.statusCode == 200) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Report sent successfully!')),
+                          );
+                          print("Response: ${response.body}");
+                        } else {
+                          throw Exception(
+                              "Failed to send report. Status code: ${response.statusCode}");
+                        }
                       } catch (e) {
+                        // Error handling
                         print('Error: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Failed to upload report.')),
+                          const SnackBar(
+                              content: Text('Failed to send report.')),
                         );
                       } finally {
                         // Dismiss loading indicator
