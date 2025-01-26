@@ -110,7 +110,7 @@ class ReportPage extends StatelessWidget {
 
                         // API URL
                         final apiUrl =
-                            'https://e403-112-135-64-46.ngrok-free.app/generate-pdf';
+                            'http://34.133.181.28:5000/generate-pdf';
 
                         // Accessing dynamic data from ReportDataProvider
                         final reportData = context

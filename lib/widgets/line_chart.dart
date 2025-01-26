@@ -123,8 +123,8 @@ class _LineChartCardState extends State<LineChartCard> with SingleTickerProvider
       sideTitles: SideTitles(
         showTitles: true,
         reservedSize: 40,
-        interval: ((maxX ?? 120) - (minX ?? 0.1)) / 10 > 0
-    ? ((maxX ?? 120) - (minX ?? 0.1)) / 10
+        interval: ((maxX ?? 120) - (minX ?? 1)) / 10 > 0
+    ? ((maxX ?? 120) - (minX ?? 1)) / 2
     : 1, // Ensure interval is at least 1
  // Dynamic interval
         getTitlesWidget: (value, meta) {
