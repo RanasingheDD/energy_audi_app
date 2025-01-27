@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:energy_app/pages/ThemeProvider.dart';
+import 'package:energy_app/provider/ThemeProvider.dart';
 import '../widgets/menu.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -148,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         const SizedBox(height: 10),
         Text(
-          'We are a team passionate about creating amazing apps for our users.',
+          'We are a team passionate about creating amazing apps for our users.\n\nRanasingheDD & Madush123',
           style: TextStyle(
             color: isDarkMode ? Colors.white : Colors.black,
             fontSize: 16,

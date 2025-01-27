@@ -110,7 +110,7 @@ class ReportPage extends StatelessWidget {
 
                         // API URL
                         final apiUrl =
-                            'http://34.133.181.28:5000/generate-pdf';
+                            'http://104.154.38.183:5000/generate-pdf';
 
                         // Accessing dynamic data from ReportDataProvider
                         final reportData = context

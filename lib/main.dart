@@ -2,7 +2,7 @@ import 'package:energy_app/pages/home_page.dart';
 import 'package:energy_app/provider/report_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:energy_app/pages/ThemeProvider.dart';
+import 'package:energy_app/provider/ThemeProvider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
